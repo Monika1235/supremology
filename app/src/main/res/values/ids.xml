@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="violation_limit" type="id" />
+    <item name="violation_speed" type="id" />
+    <item name="ViolationsFragment" type="id" />
+</resources>

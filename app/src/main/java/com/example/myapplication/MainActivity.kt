@@ -21,13 +21,30 @@ import com.google.firebase.firestore.ListenerRegistration
 
 import com.google.firebase.ktx.Firebase
 
+/**
+ * **MainActivity**
+ *
+ * This activity acts as the central controller for the app.  
+ * It:
+ * - Sets up navigation and toolbar
+ * - Listens for speed violations for the logged-in user
+ * - Shows system notifications when violations occur
+ * - Manages Firestore listeners to prevent memory leaks
+ */
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
-
     private var speedViolationListener: ListenerRegistration?=null
 
+    /**
+     * Called when the activity is created.
+     *
+     * Responsibilities:
+     * - Inflate layout
+     * - Set up navigation and toolbar
+     * - Attach listener for speed violations if user is authenticated
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -52,12 +69,18 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    /**
+     * Inflate the activity menu.
+     */
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
     }
 
+    /**
+     * Handle toolbar menu selections.
+     */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -68,19 +91,46 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Handles “navigate up” button actions for the navigation component.
+     */
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration)
                 || super.onSupportNavigateUp()
     }
 
+    /**
+     * Lifecycle callback.
+     *
+     * Removes Firestore listener to prevent memory leaks.
+     */
     override fun onDestroy(){
         super.onDestroy()
         stopListenerForSpeedViolation()
     }
+
+    /**
+     * Removes the active Firestore listener if it exists.
+     *
+     * Prevents:
+     * - Memory leaks
+     * - Listeners running after activity is gone
+     */
     private fun stopListenerForSpeedViolation() {
-        speedViolationListener?.remove()  // This will stop the listener
+        speedViolationListener?.remove() 
     }
+
+    /**
+     * Attaches a Firestore real-time listener for speed violations.
+     *
+     * @param userID The authenticated user's unique ID.
+     *
+     * Behavior:
+     * - Listens continuously for changes in the "violations" collection
+     * - Filters by current user
+     * - Triggers notifications for new pending violations
+     */
     private fun listenForSpeedViolation(userID: String) {
         val database = FirebaseFirestore.getInstance()
         val violationData = database.collection("violations").whereEqualTo("userID", userID)
@@ -102,6 +152,16 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Shows a push notification for the user when a speed violation occurs.
+     *
+     * @param violation The violation data retrieved from Firestore.
+     * @param context The context used for accessing system services.
+     *
+     * Notification is shown only when:
+     * - `violation.status == "pending"`
+     * - A valid NotificationChannel exists (Android 8+)
+     */
     private fun notifyUser(violation: SpeedViolation, context: Context){
         if(violation.status == "pending"){
             val title = "Speed violation detected"

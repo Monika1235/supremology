@@ -1,4 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Layout: fragment_violations.xml
+    Purpose:
+        Displays a list of speed violations using a RecyclerView.
+        This fragment acts as the UI container for showing all violation entries
+        received from the backend or local data source.
+
+    Notes:
+        - Uses ConstraintLayout as parent container for consistency.
+        - RecyclerView is set to match the parent and will scroll vertically.
+        - ViolationsFragment will populate this RecyclerView using ViolationAdapter.
+-->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -6,7 +18,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ViolationsFragment">
 
-    <!-- RecyclerView to show violations -->
+     <!--
+        RecyclerView:
+            - Displays the list of speed violations.
+            - Managed by ViolationAdapter.
+            - Uses LinearLayoutManager for vertical scrolling.
+            - Occupies the full available space inside the fragment.
+    -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewViolations"
         android:layout_width="match_parent"

@@ -1,27 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Layout: item_speed_violation.xml
+    Purpose:
+        Represents a single speed violation entry inside the RecyclerView.
+        Displays:
+            - Speed limit value set for the vehicle.
+            - Current speed that exceeded the limit.
+        
+    Notes:
+        - Wrapped inside a CardView for elevated UI appearance.
+        - LinearLayout used to vertically stack text items.
+        - The Adapter binds violation data to these TextViews.
+-->
+
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
     android:elevation="4dp"
-    android:padding="16dp">
+    android:padding="16dp"
+    app:cardUseCompatPadding="true">
 
+    <!--
+        LinearLayout:
+            Container for the violation information.
+            All text elements are arranged vertically.
+    -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <!--
+            TextView: Speed Limit
+                Displays the maximum allowed speed at the time of violation.
+                Mapped to violation_limit in ViolationAdapter.
+        -->
         <TextView
             android:id="@+id/violation_limit"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/speed_limit"
             android:textSize="16sp"
             android:textColor="@android:color/black"/>
-
+        
+        <!-- 
+            Small spacing 
+        -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="4dp"/>
+        
+        <!--
+            TextView: Current Speed
+                Displays the speed recorded by the vehicle that exceeded the limit.
+                Mapped to violation_speed in ViolationAdapter.
+        -->
         <TextView
             android:id="@+id/violation_speed"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/current_speed"
             android:textSize="14sp"

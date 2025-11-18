@@ -10,7 +10,16 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 
 /**
- * A simple [Fragment] subclass as the default destination in the navigation.
+ * Fragment responsible for displaying all speed violations logged for the current user.
+ *
+ * This fragment listens to Firestore's `violations` collection and shows all documents
+ * that match the current user's ID. Data is displayed using a RecyclerView backed by
+ * [ViolationAdapter].
+ *
+ * Responsibilities:
+ * - Fetching the authenticated user's ID.
+ * - Listening for Firestore updates in real-time.
+ * - Updating the RecyclerView when new violations are found.
  */
 class ViolationsFragment : Fragment() {
 
@@ -18,6 +27,15 @@ class ViolationsFragment : Fragment() {
     private lateinit var violationAdapter: ViolationAdapter
     private val violationsList = mutableListOf<SpeedViolation>()
 
+    /**
+     * Called when the view hierarchy of this fragment has been created.
+     *
+     * Initializes RecyclerView, fetches the user ID from FirebaseAuth, and
+     * starts listening for changes in Firestore's `violations` collection.
+     *
+     * @param view The root View returned by [onCreateView].
+     * @param savedInstanceState Previously saved instance state.
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 

@@ -106,7 +106,7 @@ class MainActivity : AppCompatActivity() {
         if(violation.status == "pending"){
             val title = "Speed violation detected"
             val text = "You have violated the speed limit ${violation.limit}!! current speed ${violation.speed}"
-            val channelId = "speed violation_channel"
+            val channelId = "speed_violation_channel"
             val channel = NotificationChannel(channelId,"speed violations", NotificationManager.IMPORTANCE_HIGH).
             apply{ description = "notifications for speed violations" }
             val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

@@ -15,6 +15,13 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
+/**
+ * Main activity for the application.
+ *
+ * This activity sets up location updates using the fused location provider to monitor the device's
+ * current speed and detect speed violations. When a violation is detected the violation data is
+ * recorded into the Firebase Realtime Database together with the user's associated rental company.
+ */
 class MainActivity : AppCompatActivity() {
     private lateinit var fusedLocationClient : FusedLocationProviderClient
     private lateinit var locationCallback : LocationCallback
@@ -22,6 +29,15 @@ class MainActivity : AppCompatActivity() {
     private val auth = Firebase.auth
     private val userID = auth.currentUser?.uid
 
+    /**
+     * Called when the activity is starting.
+     *
+     * Sets up the fused location provider, the location request and callback, attaches the view
+     * and requests location permissions if they are not already granted.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut down
+     * then this Bundle contains the data it most recently supplied.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -51,6 +67,15 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    /**
+     * Fetches the rental company's display name for the provided rentalCompanyID and invokes the callback with it.
+     *
+     * This reads the "rental_companies/{rentalCompanyID}/rentalCompanyId" node from Firebase and returns the
+     * resolved company name (if available) via the provided callback.
+     *
+     * @param rentalCompanyID The ID of the rental company to look up.
+     * @param callback A function that will be invoked with the rental company name once it is retrieved.
+     */
     fun fetchRentalCompanyName(rentalCompanyID:String, callback: (String) -> Unit) {
         val rentalCompanyRef = database.getReference("rental_companies").child(rentalCompanyID)
         rentalCompanyRef.child("rentalCompanyId").addListenerForSingleValueEvent(object :
@@ -109,9 +134,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Called when the activity is no longer visible to the user.
+     *
+     * Stops location updates to avoid continuing to receive location callbacks when the activity is stopped.
+     */
     override fun onStop() {
         super.onStop()
         fusedLocationClient.removeLocationUpdates(locationCallback)
     }
 }
-
